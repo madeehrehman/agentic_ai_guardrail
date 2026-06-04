@@ -9,6 +9,8 @@ from langgraph.types import Command
 
 from agentic_guardrail.phase1 import backends
 from agentic_guardrail.phase1.backends import WorldState
+from langgraph.checkpoint.memory import MemorySaver
+
 from agentic_guardrail.phase1.graph import compile_graph
 
 
@@ -42,9 +44,13 @@ def _resume(graph, config, decision: dict):
     return graph.invoke(Command(resume=decision), config=config)
 
 
+def _graph():
+    return compile_graph(checkpointer=MemorySaver())
+
+
 def test_grc_close_approve_completes(fresh_world: WorldState):
     world = fresh_world
-    graph = compile_graph()
+    graph = _graph()
     config = _config()
 
     result = graph.invoke(_initial("close finding FIN-2024-017"), config=config)
@@ -60,7 +66,7 @@ def test_grc_close_approve_completes(fresh_world: WorldState):
 
 
 def test_human_reject():
-    graph = compile_graph()
+    graph = _graph()
     config = _config()
     graph.invoke(_initial("close finding FIN-2024-017"), config=config)
     result = _resume(
@@ -73,7 +79,7 @@ def test_human_reject():
 
 def test_stale_finding_blocked_after_resume(fresh_world: WorldState):
     world = fresh_world
-    graph = compile_graph()
+    graph = _graph()
     config = _config()
     graph.invoke(_initial("close finding FIN-2024-017"), config=config)
     world.simulate_external_close("FIN-2024-017")
@@ -86,7 +92,7 @@ def test_stale_finding_blocked_after_resume(fresh_world: WorldState):
 
 
 def test_timeout_path():
-    graph = compile_graph()
+    graph = _graph()
     config = _config()
     graph.invoke(_initial("email notify compliance"), config=config)
     result = _resume(
@@ -99,7 +105,7 @@ def test_timeout_path():
 
 def test_edit_email_then_approve(fresh_world: WorldState):
     world = fresh_world
-    graph = compile_graph()
+    graph = _graph()
     config = _config()
     graph.invoke(_initial("send email to compliance"), config=config)
     result = _resume(
@@ -122,7 +128,7 @@ def test_edit_email_then_approve(fresh_world: WorldState):
 
 def test_checkpoint_survives_recompile():
     """Thread state persists across invoke/stop/resume pattern."""
-    graph = compile_graph()
+    graph = _graph()
     config = _config()
     graph.invoke(_initial("close finding FIN-2024-017"), config=config)
     snap = graph.get_state(config)

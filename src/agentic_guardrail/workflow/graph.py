@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 
+from agentic_guardrail.checkpointing import get_checkpointer
 from agentic_guardrail.phase1.nodes import (
     execute_kinetic,
     fail_run,
@@ -93,6 +93,11 @@ def build_graph() -> StateGraph:
     return builder
 
 
-def compile_graph(*, checkpointer: MemorySaver | None = None):
-    cp = checkpointer or MemorySaver()
+def compile_graph(
+    *,
+    checkpointer=None,
+    checkpoint_backend: str | None = None,
+    db_path=None,
+):
+    cp = checkpointer or get_checkpointer(backend=checkpoint_backend, db_path=db_path)
     return build_graph().compile(checkpointer=cp)

@@ -29,7 +29,7 @@ START → receive_request (loop cap)
 
 1. **State as control surface** — Pydantic models for proposals/decisions; LangGraph `State` TypedDict with append-only `audit_log`.
 2. **Bounded loops** — `max_loops` in `receive_request`.
-3. **Checkpointer** — `MemorySaver` (swap for SQLite/Postgres in production).
+3. **Checkpointer** — **SQLite by default** (`.data/checkpoints.db`); `MemorySaver` for unit tests. Survives process restart on same `thread_id`.
 4. **`interrupt()` inside `human_gate`** — proposal snapshot before pause; no writes before interrupt.
 5. **Idempotency** — execution deduped by `proposal_id`; validate/execute only after resume.
 6. **Stale-state check** — GRC finding `version`/`status` re-read after resume (simulates another user closing the finding during review).
@@ -56,13 +56,29 @@ cd c:\Users\madaz\workspace\code\git\agentic_ai_guardrail
 .\.venv\Scripts\python.exe -m agentic_guardrail.phase1.demo "close finding FIN-2024-017" --auto-approve
 ```
 
+### Checkpointer (SQLite)
+
+```powershell
+# Default: persists under .data/checkpoints.db
+python -m agentic_guardrail.phase1.demo "close finding FIN-2024-017"
+
+# In-memory only (like tests)
+$env:GUARDRAIL_CHECKPOINT = "memory"
+```
+
+```python
+from agentic_guardrail.checkpointing import get_checkpointer
+# get_checkpointer(backend="sqlite")  # default
+# get_checkpointer(backend="memory")  # tests / ephemeral
+```
+
 ### Programmatic resume
 
 ```python
 from langgraph.types import Command
 from agentic_guardrail.phase1.graph import compile_graph
 
-graph = compile_graph()
+graph = compile_graph()  # SQLite unless GUARDRAIL_CHECKPOINT=memory
 config = {"configurable": {"thread_id": "case-123"}}
 graph.invoke({...initial state...}, config=config)
 
@@ -87,7 +103,9 @@ Each node appends `{policy_id, decision, detail}` to `audit_log` using the guard
 
 ## You're done when
 
-- [ ] Run demo and complete approve + reject paths manually  
-- [ ] Run `pytest` green  
-- [ ] Read `human_approval_gate` and explain idempotency before `interrupt()`  
-- [ ] Trigger stale path by closing finding in backend while “waiting” (see test)  
+- [x] Run demo and complete approve + reject paths manually  
+- [x] Run `pytest` green — `tests/test_phase1_hitl.py` (6 passed)  
+- [x] Read `human_approval_gate` and explain idempotency before `interrupt()`  
+- [x] Stale path — covered by `test_stale_finding_blocked_after_resume`  
+
+**Phase 1 checkpoint: complete.**

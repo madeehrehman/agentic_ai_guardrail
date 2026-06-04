@@ -35,7 +35,7 @@ Full threat model: [docs/phase-0/threat-models/banking-regulatory-workflow-assis
 | Phase | Topic | Code / docs |
 |-------|--------|-------------|
 | **0** | Threat model & OWASP taxonomy | [docs/phase-0/](docs/phase-0/) |
-| **1** | LangGraph HITL on highest blast-radius actions | `src/agentic_guardrail/phase1/` · [docs/phase-1/](docs/phase-1/) |
+| **1** | LangGraph HITL + SQLite checkpointer ✓ | `src/agentic_guardrail/phase1/` · [docs/phase-1/](docs/phase-1/) |
 | **2** | Input guard (injection, Presidio PII, routing) | `src/agentic_guardrail/phase2/` · [docs/phase-2/](docs/phase-2/) |
 | **3–7** | Retrieval, tools, frameworks, eval, architecture | Planned — see [learning plan](./guardrails-agentic-ai-langgraph-learning-plan.md) |
 
