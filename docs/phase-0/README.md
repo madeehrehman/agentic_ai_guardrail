@@ -30,6 +30,8 @@ You are done when you can:
 
 Use this as the reference threat model for Phases 1–4 implementations in this repo, or copy the template for a second system.
 
+**Implementation progress:** Phase 1 (HITL) · Phase 2 (input guard) — see [phase-1](../phase-1/) and [phase-2](../phase-2/).
+
 ## Official sources (download / verify)
 
 - **OWASP Top 10 for LLM Applications 2025** (CC BY-SA 4.0): https://genai.owasp.org/resource/owasp-top-10-for-llm-applications-2025/

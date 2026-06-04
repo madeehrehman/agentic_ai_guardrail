@@ -81,7 +81,7 @@ Each node appends `{policy_id, decision, detail}` to `audit_log` using the guard
 
 | Next phase | Hook |
 |------------|------|
-| Phase 2 | Insert `input_guard` before `receive_request` |
+| Phase 2 | Done — `workflow/graph.py` runs `input_guard` before `receive_request` |
 | Phase 3 | Add RAG + `retrieval_rail` before planner context |
 | Phase 4 | Replace raw `execute_kinetic` with `guarded_tool` wrapper + budgets |
 

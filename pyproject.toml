@@ -15,6 +15,7 @@ dev = ["pytest>=8.0"]
 
 [project.scripts]
 regulatory-hitl-demo = "agentic_guardrail.phase1.demo:main"
+regulatory-workflow-demo = "agentic_guardrail.phase2.demo:main"
 
 [build-system]
 requires = ["hatchling"]
