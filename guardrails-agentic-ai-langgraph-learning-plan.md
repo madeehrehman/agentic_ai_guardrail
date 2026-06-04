@@ -60,7 +60,7 @@ A chatbot that fails produces bad *text*. An agent that fails takes bad *actions
 
 **You're done when** your graph can pause on a risky action, persist indefinitely, accept a human approve/edit/reject decision, resume idempotently, and time out gracefully.
 
-**Resources:** LangGraph docs on human-in-the-loop, persistence/checkpointers, and `interrupt()`; the HumanInTheLoopMiddleware `interrupt_on` (approve/edit/reject) pattern.
+**Resources:** LangGraph docs on human-in-the-loop, persistence/checkpointers, and `interrupt()`; the HumanInTheLoopMiddleware `interrupt_on` (approve/edit/reject) pattern. **Implementation in this repo:** [docs/phase-1/](docs/phase-1/) · `src/agentic_guardrail/phase1/`.
 
 ---
 
