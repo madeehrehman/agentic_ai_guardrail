@@ -7,8 +7,6 @@
 
 Work **one phase at a time**. Each phase has a goal, the reasoning behind it, a short task list, **one hands-on build**, and a "you're done when" checkpoint. Do not start the next phase until the build is working and the checkpoint is met. The phases are deliberately sequenced so nothing is front-loaded — the structure is the pacing.
 
-Rough cadence: most phases are 1–2 weeks of part-time work. Phases 0–4 are the core; 5–7 are where you move from competent to principal-level. The whole arc is a 10–14 week journey if you keep a steady pace.
-
 **A note on currency:** this field is moving fast. Library APIs (LangGraph, NeMo, Guardrails AI) and classifier versions change frequently. Treat any version number or exact API name here as "verify against the official docs before you build." The *concepts* are stable; the *signatures* are not.
 
 ### The one mental model to carry through every phase
@@ -41,7 +39,7 @@ A chatbot that fails produces bad *text*. An agent that fails takes bad *actions
 
 **You're done when** you can, on a whiteboard, name all ten OWASP LLM items, explain the difference between direct and indirect injection, and point at your own system's single highest-blast-radius action.
 
-**Resources:** OWASP GenAI / LLM Top 10 (2025) official site; the "production safety layers" reference guides that map each OWASP item to a guardrail layer.
+**Resources:** OWASP GenAI / LLM Top 10 (2025) official site; the "production safety layers" reference guides that map each OWASP item to a guardrail layer. **In-repo study pack:** [docs/phase-0/](docs/phase-0/) (summaries, OWASP→guardrail mapping, threat model template).
 
 ---
 

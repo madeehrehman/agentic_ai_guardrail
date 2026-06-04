@@ -75,3 +75,6 @@ logs/
 data/
 tmp/
 temp/
+
+# Optional local copies of OWASP PDFs (see docs/phase-0/references.md)
+docs/phase-0/literature/*.pdf
