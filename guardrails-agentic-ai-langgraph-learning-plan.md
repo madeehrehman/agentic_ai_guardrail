@@ -121,7 +121,7 @@ A chatbot that fails produces bad *text*. An agent that fails takes bad *actions
 
 **You're done when** an out-of-scope tool call is blocked pre-execution, a runaway loop is halted by the budget/loop guard, and a destructive call is force-routed to human approval — all logged.
 
-**Resources:** OWASP LLM06 guidance; pre-action authorization patterns (policy-based access control for agents); runtime observability/loop-detection tooling for agents.
+**Resources:** OWASP LLM06 guidance; pre-action authorization patterns (policy-based access control for agents); runtime observability/loop-detection tooling for agents. **Implementation in this repo:** [docs/phase-4/](docs/phase-4/) · `src/agentic_guardrail/phase4/`.
 
 ---
 

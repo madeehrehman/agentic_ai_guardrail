@@ -1,4 +1,4 @@
-"""Full regulatory workflow state (Phases 1–3)."""
+"""Full regulatory workflow state (Phases 1–4)."""
 
 from __future__ import annotations
 
@@ -40,3 +40,16 @@ class WorkflowState(TypedDict):
     output_guard_policy_id: NotRequired[str]
     output_guard_detail: NotRequired[str]
     final_response: NotRequired[str]
+    # Phase 4 — tool-call rails
+    kinetic_action_count: NotRequired[int]
+    max_kinetic_actions: NotRequired[int]
+    tool_budget_spent: NotRequired[int]
+    max_tool_budget: NotRequired[int]
+    tool_call_fingerprints: NotRequired[list[str]]
+    tool_authorization_decision: NotRequired[str]
+    tool_authorization_policy_id: NotRequired[str]
+    tool_authorization_detail: NotRequired[str]
+    tool_result: NotRequired[str]
+    post_tool_decision: NotRequired[str]
+    post_tool_policy_id: NotRequired[str]
+    post_tool_detail: NotRequired[str]

@@ -1,4 +1,4 @@
-"""Regulatory workflow: Phase 2 input → Phase 3 RAG/output → Phase 1 HITL."""
+"""Regulatory workflow: Phase 2 input → Phase 3 RAG → Phase 4 tools → Phase 1 HITL."""
 
 from __future__ import annotations
 
@@ -6,7 +6,6 @@ from langgraph.graph import END, START, StateGraph
 
 from agentic_guardrail.checkpointing import get_checkpointer
 from agentic_guardrail.phase1.nodes import (
-    execute_kinetic,
     fail_run,
     human_approval_gate,
     plan_kinetic_action,
@@ -15,6 +14,13 @@ from agentic_guardrail.phase1.nodes import (
     route_after_human,
     timeout_action,
     validate_after_resume,
+)
+from agentic_guardrail.phase4.nodes import (
+    authorize_tool,
+    execute_guarded,
+    pre_authorize_proposal,
+    route_after_authorize,
+    route_after_pre_authorize,
 )
 from agentic_guardrail.phase2.node import (
     input_escalation_gate,
@@ -50,12 +56,14 @@ def build_graph() -> StateGraph:
     builder.add_node("draft_response", draft_response)
     builder.add_node("output_guard", output_guard)
 
-    # Phase 1 — kinetic path
+    # Phase 1 + 4 — kinetic path (HITL + guarded_tool)
     builder.add_node("receive_request", receive_request)
     builder.add_node("plan", plan_kinetic_action)
+    builder.add_node("pre_authorize", pre_authorize_proposal)
     builder.add_node("human_gate", human_approval_gate)
     builder.add_node("validate", validate_after_resume)
-    builder.add_node("execute", execute_kinetic)
+    builder.add_node("authorize_tool", authorize_tool)
+    builder.add_node("execute", execute_guarded)
     builder.add_node("reject", reject_action)
     builder.add_node("timeout", timeout_action)
     builder.add_node("fail", fail_run)
@@ -87,13 +95,11 @@ def build_graph() -> StateGraph:
     builder.add_edge("draft_response", "output_guard")
     builder.add_edge("output_guard", END)
 
-    # Kinetic path
-    def route_after_plan(state: dict) -> str:
-        return "human_gate" if state.get("pending_proposal") else "fail"
-
+    # Kinetic path — Phase 4 pre-auth before HITL, guarded execution after
+    builder.add_edge("plan", "pre_authorize")
     builder.add_conditional_edges(
-        "plan",
-        route_after_plan,
+        "pre_authorize",
+        route_after_pre_authorize,
         {"human_gate": "human_gate", "fail": "fail"},
     )
     builder.add_conditional_edges(
@@ -110,11 +116,16 @@ def build_graph() -> StateGraph:
     def after_validate(state: dict) -> str:
         if state.get("status") == "stale_blocked":
             return "end"
-        return "execute"
+        return "authorize"
 
     builder.add_conditional_edges(
         "validate",
         after_validate,
+        {"authorize": "authorize_tool", "end": END},
+    )
+    builder.add_conditional_edges(
+        "authorize_tool",
+        route_after_authorize,
         {"execute": "execute", "end": END},
     )
     builder.add_edge("execute", END)
