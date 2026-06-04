@@ -37,12 +37,13 @@ Full threat model: [docs/phase-0/threat-models/banking-regulatory-workflow-assis
 | **0** | Threat model & OWASP taxonomy | [docs/phase-0/](docs/phase-0/) |
 | **1** | LangGraph HITL + SQLite checkpointer ✓ | `src/agentic_guardrail/phase1/` · [docs/phase-1/](docs/phase-1/) |
 | **2** | Input guard (injection, Presidio PII, routing) | `src/agentic_guardrail/phase2/` · [docs/phase-2/](docs/phase-2/) |
-| **3–7** | Retrieval, tools, frameworks, eval, architecture | Planned — see [learning plan](./guardrails-agentic-ai-langgraph-learning-plan.md) |
+| **3** | Retrieval rail + output guard | `src/agentic_guardrail/phase3/` · [docs/phase-3/](docs/phase-3/) |
+| **4–7** | Tool rails, frameworks, eval, architecture | Planned — see [learning plan](./guardrails-agentic-ai-langgraph-learning-plan.md) |
 
 Integrated graph (Phase 1 + 2): `src/agentic_guardrail/workflow/graph.py`
 
 ```text
-input_guard → receive_request → plan → human_gate [interrupt] → validate → execute
+input_guard → retrieve → retrieval_rail → (Q&A → output_guard | kinetic → human_gate → execute)
 ```
 
 ## Quick start
@@ -55,7 +56,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -e ".[dev]"
 .\scripts\setup_presidio.ps1   # spaCy model for PII (Presidio)
-python -m pytest tests/ -q   # 16 passed (Phase 1 HITL, SQLite checkpoint, Phase 2 input guard)
+python -m pytest tests/ -q   # 24 passed (Phase 1–3: HITL, input guard, retrieval + output rails)
 ```
 
 ### Demos

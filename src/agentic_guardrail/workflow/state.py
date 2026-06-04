@@ -1,4 +1,4 @@
-"""Full regulatory workflow state (Phase 1 HITL + Phase 2 input guard)."""
+"""Full regulatory workflow state (Phases 1–3)."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ class WorkflowState(TypedDict):
     human_decision: dict[str, Any] | None
     execution_result: str | None
     audit_log: Annotated[list[dict[str, Any]], merge_audit]
-    # Phase 2 — input guard contract
+    # Phase 2
     raw_user_request: NotRequired[str]
     input_guard_decision: NotRequired[str]
     input_guard_policy_id: NotRequired[str]
@@ -27,3 +27,16 @@ class WorkflowState(TypedDict):
     pii_token_map: NotRequired[dict[str, str]]
     refusal_message: NotRequired[str | None]
     input_escalation_pending: NotRequired[bool]
+    # Phase 3 — RAG + output
+    raw_retrieved_chunks: NotRequired[list[dict[str, Any]]]
+    retrieved_chunks: NotRequired[list[dict[str, Any]]]
+    approved_chunks: NotRequired[list[dict[str, Any]]]
+    blocked_chunk_ids: NotRequired[list[str]]
+    retrieval_decision: NotRequired[str]
+    retrieval_policy_id: NotRequired[str]
+    retrieval_detail: NotRequired[str]
+    agent_response: NotRequired[str]
+    output_guard_decision: NotRequired[str]
+    output_guard_policy_id: NotRequired[str]
+    output_guard_detail: NotRequired[str]
+    final_response: NotRequired[str]

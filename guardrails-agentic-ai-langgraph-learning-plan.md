@@ -100,7 +100,7 @@ A chatbot that fails produces bad *text*. An agent that fails takes bad *actions
 
 **You're done when** a poisoned document containing an embedded instruction is retrieved, flagged by the retrieval rail, and prevented from hijacking the agent — and your agent refuses to disclose its system prompt under adversarial probing.
 
-**Resources:** Guardrails AI validator hub; Protect AI's LLM Guard scanners; research notes on indirect/RAG injection.
+**Resources:** Guardrails AI validator hub; Protect AI's LLM Guard scanners; research notes on indirect/RAG injection. **Implementation in this repo:** [docs/phase-3/](docs/phase-3/) · `src/agentic_guardrail/phase3/`.
 
 ---
 
