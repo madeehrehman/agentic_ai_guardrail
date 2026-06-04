@@ -63,7 +63,7 @@ Uses `en_core_web_sm` by default (configure in `presidio_pii.py` for `en_core_we
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -e ".[dev]"
 .\.venv\Scripts\python.exe -m spacy download en_core_web_sm
-.\.venv\Scripts\python.exe -m pytest tests/test_phase2_input_guard.py tests/test_phase1_hitl.py -q
+.\.venv\Scripts\python.exe -m pytest tests/ -q   # 16 tests (Phase 1 + SQLite + Phase 2)
 ```
 
 ```powershell

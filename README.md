@@ -55,7 +55,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -e ".[dev]"
 .\scripts\setup_presidio.ps1   # spaCy model for PII (Presidio)
-python -m pytest tests/ -q
+python -m pytest tests/ -q   # 16 passed (Phase 1 HITL, SQLite checkpoint, Phase 2 input guard)
 ```
 
 ### Demos

@@ -104,7 +104,7 @@ Each node appends `{policy_id, decision, detail}` to `audit_log` using the guard
 ## You're done when
 
 - [x] Run demo and complete approve + reject paths manually  
-- [x] Run `pytest` green — `tests/test_phase1_hitl.py` (6 passed)  
+- [x] Run `pytest` green — `tests/test_phase1_hitl.py` + `tests/test_phase1_sqlite_checkpoint.py`  
 - [x] Read `human_approval_gate` and explain idempotency before `interrupt()`  
 - [x] Stale path — covered by `test_stale_finding_blocked_after_resume`  
 
