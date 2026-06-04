@@ -35,7 +35,7 @@ A chatbot that fails produces bad *text*. An agent that fails takes bad *actions
 3. Learn the agent-specific failure modes that aren't in the chatbot world: instruction hijacking, tool misuse, runaway loops, and "blast radius" (the size of the worst irreversible action an agent can take unsupervised).
 4. Understand the architectural fork early: **application-level** guardrails (in your graph) vs **gateway/centralized** guardrails (a policy layer every service routes through). You'll choose deliberately in Phase 7; just know the fork exists.
 
-**Build:** Write a one-page threat model for one of your own systems (e.g., a multi-agent legal RAG stack or a trading agent). List the agent's tools, the worst irreversible action each tool enables, and which OWASP items apply. No code — this is the design artifact you'll guard against for the rest of the plan.
+**Build:** Write a one-page threat model for one of your own systems (e.g., a multi-agent legal RAG stack or a trading agent). List the agent's tools, the worst irreversible action each tool enables, and which OWASP items apply. No code — this is the design artifact you'll guard against for the rest of the plan. **Example in this repo:** [banking regulatory workflow assistant](docs/phase-0/threat-models/banking-regulatory-workflow-assistant.md) (RAG + GRC/email/API tools, posture B with HITL).
 
 **You're done when** you can, on a whiteboard, name all ten OWASP LLM items, explain the difference between direct and indirect injection, and point at your own system's single highest-blast-radius action.
 
