@@ -1,5 +1,7 @@
 # Documentation
 
+Project overview and setup: [README.md](../README.md) at the repository root.
+
 | Path | Description |
 |------|-------------|
 | [phase-0/](./phase-0/) | Threat model & taxonomy — OWASP LLM/Agentic Top 10 study guides and template |
