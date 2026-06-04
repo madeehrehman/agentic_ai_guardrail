@@ -8,7 +8,8 @@
 
 | Module | Role |
 |--------|------|
-| `phase2/scanners.py` | Injection, structure, PII heuristics (swap for Llama Guard / Presidio) |
+| `phase2/scanners.py` | Injection, structure; PII via **Presidio** (regex fallback) |
+| `phase2/presidio_pii.py` | Presidio `AnalyzerEngine` + `<PII_*>` token map |
 | `phase2/guard.py` | `score_user_input()` → verdict |
 | `phase2/node.py` | `input_guard`, `refuse_input`, `input_escalation_gate` |
 | `phase2/models.py` | Decision contract: `allow \| block \| rewrite \| escalate` |
@@ -42,10 +43,26 @@ START → input_guard
 - **Escalate:** medium injection score → security `interrupt()` before planner  
 - **Allow:** benign compliance queries  
 
+## Presidio setup (local)
+
+```powershell
+.\scripts\setup_presidio.ps1
+```
+
+Or manually:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+.\.venv\Scripts\python.exe -m spacy download en_core_web_sm
+```
+
+Uses `en_core_web_sm` by default (configure in `presidio_pii.py` for `en_core_web_lg` in production).
+
 ## Run
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+.\.venv\Scripts\python.exe -m spacy download en_core_web_sm
 .\.venv\Scripts\python.exe -m pytest tests/test_phase2_input_guard.py tests/test_phase1_hitl.py -q
 ```
 
@@ -73,12 +90,22 @@ builder.add_node("input_guard", input_guard)
 builder.add_conditional_edges("input_guard", route_after_input_guard, {...})
 ```
 
+## PII backend
+
+| `InputGuardConfig.pii_backend` | Behavior |
+|-------------------------------|----------|
+| `auto` (default) | Presidio if spaCy model present, else regex |
+| `presidio` | Force Presidio |
+| `regex` | Force regex only (tests / offline) |
+
+Audit policy id: `input.pii.tokenize.presidio` when Presidio runs.
+
 ## Production swaps
 
-| Heuristic today | Production replacement |
-|-----------------|------------------------|
-| Regex injection | Llama Guard 3, Lakera, NeMo jailbreak |
-| Regex PII | Microsoft Presidio + reversible anonymizer |
+| Component | Notes |
+|-----------|--------|
+| Injection heuristics | Llama Guard 3, Lakera, NeMo jailbreak |
+| Presidio | Add custom recognizers (internal account IDs); consider `en_core_web_lg` |
 | Fixed thresholds | Calibrated scores + Phase 6 eval harness |
 
 ## Phase 3 handoff

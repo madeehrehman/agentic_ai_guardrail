@@ -12,6 +12,7 @@ from agentic_guardrail.phase1.backends import WorldState
 from agentic_guardrail.phase2.guard import score_user_input
 from agentic_guardrail.phase2.models import GuardDecision
 from agentic_guardrail.phase2.node import input_guard, route_after_input_guard
+from agentic_guardrail.phase2.presidio_pii import presidio_available, scan_pii_presidio
 from agentic_guardrail.workflow.graph import compile_graph
 
 
@@ -37,6 +38,15 @@ class TestScoreUserInput:
         assert "<PII_EMAIL_1>" in (verdict.sanitized_text or "")
         assert "jane.doe@personal.com" in verdict.pii_token_map.values()
         assert "jane.doe@personal.com" not in (verdict.sanitized_text or "")
+
+    @pytest.mark.skipif(not presidio_available(), reason="Presidio/spaCy model not installed")
+    def test_presidio_detects_email_and_phone(self):
+        scan = scan_pii_presidio("Reach jane.doe@personal.com or 555-123-4567.")
+        assert any(k == "email" for k, *_ in scan.spans)
+        assert any(k == "phone" for k, *_ in scan.spans)
+        assert "input.pii.tokenize.presidio" in score_user_input(
+            "Reach jane.doe@personal.com"
+        ).policy_id
 
     def test_allows_benign_compliance_query(self):
         text = "Summarize BCBS 239 aggregation requirements for entity UK."

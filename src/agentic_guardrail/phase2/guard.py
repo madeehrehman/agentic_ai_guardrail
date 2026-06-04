@@ -23,6 +23,17 @@ class InputGuardConfig:
     block_injection_threshold: float = 0.85
     escalate_injection_threshold: float = 0.55
     max_chars: int = 8000
+    pii_backend: str = "auto"  # auto | presidio | regex
+
+
+def _pii_engine_name(backend: str) -> str:
+    if backend == "presidio":
+        return "presidio"
+    if backend == "regex":
+        return "regex"
+    from agentic_guardrail.phase2.presidio_pii import presidio_available
+
+    return "presidio" if presidio_available() else "regex"
 
 
 def score_user_input(text: str, config: InputGuardConfig | None = None) -> InputGuardVerdict:
@@ -30,7 +41,7 @@ def score_user_input(text: str, config: InputGuardConfig | None = None) -> Input
 
     injection = scan_injection(text)
     structural_score, structural_detail = scan_structure(text, max_chars=config.max_chars)
-    pii = scan_pii(text)
+    pii = scan_pii(text, backend=config.pii_backend)
 
     scores = InputGuardScores(
         injection=injection.score,
@@ -71,10 +82,16 @@ def score_user_input(text: str, config: InputGuardConfig | None = None) -> Input
 
     if pii.spans:
         sanitized = apply_pii_tokens(text, pii)
+        engine = _pii_engine_name(config.pii_backend)
         return InputGuardVerdict(
             decision=GuardDecision.REWRITE,
-            policy_id="input.pii.tokenize",
-            detail=f"tokenized {len(pii.spans)} PII span(s) before agent processing",
+            policy_id="input.pii.tokenize.presidio"
+            if engine == "presidio"
+            else "input.pii.tokenize",
+            detail=(
+                f"tokenized {len(pii.spans)} PII span(s) via {engine} "
+                "before agent processing"
+            ),
             scores=scores,
             sanitized_text=sanitized,
             pii_spans=[

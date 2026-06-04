@@ -1,4 +1,4 @@
-"""Heuristic scanners — swap for Llama Guard / Lakera / Presidio in production."""
+"""Injection/structure heuristics; PII via Presidio (fallback: regex)."""
 
 from __future__ import annotations
 
@@ -61,7 +61,7 @@ def scan_structure(text: str, *, max_chars: int = 8000) -> tuple[float, str]:
     return 0.0, "ok"
 
 
-def scan_pii(text: str) -> PiiScan:
+def scan_pii_regex(text: str) -> PiiScan:
     spans: list[tuple[str, int, int, str]] = []
     token_map: dict[str, str] = {}
     counters: dict[str, int] = {}
@@ -76,6 +76,25 @@ def scan_pii(text: str) -> PiiScan:
 
     spans.sort(key=lambda s: s[1])
     return PiiScan(spans=spans, token_map=token_map)
+
+
+def scan_pii(text: str, *, backend: str = "auto") -> PiiScan:
+    """
+    Detect PII for input guard rewrite path.
+
+    backend: ``auto`` (Presidio if installed), ``presidio``, or ``regex``.
+    """
+    if backend == "regex":
+        return scan_pii_regex(text)
+    if backend == "presidio":
+        from agentic_guardrail.phase2.presidio_pii import scan_pii_presidio
+
+        return scan_pii_presidio(text)
+    from agentic_guardrail.phase2.presidio_pii import presidio_available, scan_pii_presidio
+
+    if presidio_available():
+        return scan_pii_presidio(text)
+    return scan_pii_regex(text)
 
 
 def apply_pii_tokens(text: str, scan: PiiScan) -> str:
