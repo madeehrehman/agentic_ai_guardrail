@@ -1,4 +1,4 @@
-"""Regulatory workflow: Phase 2 input → Phase 3 RAG → Phase 4 tools → Phase 1 HITL."""
+"""Regulatory workflow: Phases 2–5 (input, RAG, tools, frameworks) + Phase 1 HITL."""
 
 from __future__ import annotations
 
@@ -29,6 +29,10 @@ from agentic_guardrail.phase2.node import (
     route_after_escalation,
     route_after_input_guard,
 )
+from agentic_guardrail.phase5.nodes import (
+    route_after_topical,
+    topical_dialog_rail,
+)
 from agentic_guardrail.phase3.nodes import (
     draft_response,
     is_kinetic_request,
@@ -48,6 +52,10 @@ def build_graph() -> StateGraph:
     builder.add_node("input_guard", input_guard)
     builder.add_node("refuse_input", refuse_input)
     builder.add_node("input_escalation", input_escalation_gate)
+
+    # Phase 5 — topical dialog rail (NeMo-shaped stub by default)
+    builder.add_node("topical_rail", topical_dialog_rail)
+    builder.add_node("topical_refuse", retrieval_refusal)
 
     # Phase 3 — RAG path
     builder.add_node("retrieve", retrieve_chunks)
@@ -81,8 +89,15 @@ def build_graph() -> StateGraph:
         {"continue": "receive_request", "end": END},
     )
 
+    builder.add_edge("receive_request", "topical_rail")
+    builder.add_conditional_edges(
+        "topical_rail",
+        route_after_topical,
+        {"refuse": "topical_refuse", "continue": "retrieve"},
+    )
+    builder.add_edge("topical_refuse", END)
+
     # All requests: retrieve + retrieval rail (indirect injection door)
-    builder.add_edge("receive_request", "retrieve")
     builder.add_edge("retrieve", "retrieval_rail")
     builder.add_conditional_edges(
         "retrieval_rail",

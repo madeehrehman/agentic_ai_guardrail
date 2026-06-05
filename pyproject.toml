@@ -16,6 +16,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+phase5 = ["guardrails-ai>=0.6"]
+nemo = ["nemoguardrails>=0.11"]
 # After pip install -e ., run: python -m spacy download en_core_web_sm
 
 [project.scripts]

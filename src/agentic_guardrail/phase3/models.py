@@ -49,11 +49,15 @@ class OutputVerdict(BaseModel):
     final_response: str
     leak_detected: bool = False
     secrets_detected: bool = False
+    framework: str | None = None  # handrolled | guardrails-ai | layered
 
     def to_state_patch(self) -> dict[str, Any]:
-        return {
+        patch = {
             "output_guard_decision": self.decision.value,
             "output_guard_policy_id": self.policy_id,
             "output_guard_detail": self.detail,
             "final_response": self.final_response,
         }
+        if self.framework:
+            patch["output_guard_framework"] = self.framework
+        return patch

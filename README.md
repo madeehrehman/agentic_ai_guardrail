@@ -39,12 +39,13 @@ Full threat model: [docs/phase-0/threat-models/banking-regulatory-workflow-assis
 | **2** | Input guard (injection, Presidio PII, routing) | `src/agentic_guardrail/phase2/` · [docs/phase-2/](docs/phase-2/) |
 | **3** | Retrieval rail + output guard | `src/agentic_guardrail/phase3/` · [docs/phase-3/](docs/phase-3/) |
 | **4** | Tool-call rails (`guarded_tool`, budget, loop detect) | `src/agentic_guardrail/phase4/` · [docs/phase-4/](docs/phase-4/) |
-| **5–7** | Frameworks, eval, architecture | Planned — see [learning plan](./guardrails-agentic-ai-langgraph-learning-plan.md) |
+| **5** | Guardrails AI + NeMo adapters (env toggles) | `src/agentic_guardrail/phase5/` · [docs/phase-5/](docs/phase-5/) |
+| **6–7** | Eval, gateway architecture | Planned — see [learning plan](./guardrails-agentic-ai-langgraph-learning-plan.md) |
 
 Integrated graph: `src/agentic_guardrail/workflow/graph.py`
 
 ```text
-input_guard → retrieve → retrieval_rail → (Q&A → output_guard | kinetic → pre_authorize → human_gate → authorize_tool → execute)
+input_guard → topical_rail → retrieve → … → output_guard (Guardrails AI optional) | kinetic → …
 ```
 
 ## Quick start
@@ -57,7 +58,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -e ".[dev]"
 .\scripts\setup_presidio.ps1   # spaCy model for PII (Presidio)
-python -m pytest tests/ -q   # 37 passed — Phases 1–4
+python -m pytest tests/ -q   # 44 passed — Phases 1–5
 ```
 
 ### Demos

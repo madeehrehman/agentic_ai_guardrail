@@ -53,3 +53,8 @@ class WorkflowState(TypedDict):
     post_tool_decision: NotRequired[str]
     post_tool_policy_id: NotRequired[str]
     post_tool_detail: NotRequired[str]
+    # Phase 5 — frameworks
+    topical_decision: NotRequired[str]
+    topical_policy_id: NotRequired[str]
+    topical_detail: NotRequired[str]
+    output_guard_framework: NotRequired[str]

@@ -52,4 +52,4 @@ python -m agentic_guardrail.phase2.demo "close finding FIN-2024-017" --auto-appr
 
 ## Phase 5 handoff
 
-Replace hand-rolled output/topic validators with Guardrails AI or NeMo where latency budget allows; keep `guarded_tool` as the agency layer.
+Phase 5 integrates Guardrails AI (`GUARDRAIL_OUTPUT_BACKEND`) and topical rail (`GUARDRAIL_TOPICAL_BACKEND`); keep `guarded_tool` as the agency layer.

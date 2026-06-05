@@ -6,7 +6,8 @@ from typing import Any
 
 from agentic_guardrail.phase1.models import AuditEvent, RunStatus
 from agentic_guardrail.phase3.corpus import search_corpus
-from agentic_guardrail.phase3.guards import score_output, score_retrieved_chunks
+from agentic_guardrail.phase3.guards import score_retrieved_chunks
+from agentic_guardrail.phase5.output import score_output
 from agentic_guardrail.phase3.models import GuardDecision, RetrievedChunk
 
 

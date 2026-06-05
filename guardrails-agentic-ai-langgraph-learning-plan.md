@@ -141,7 +141,7 @@ A chatbot that fails produces bad *text*. An agent that fails takes bad *actions
 
 **You're done when** you can articulate, for a given requirement, which framework you'd reach for and why — and you have one integrated and latency-measured in your own graph.
 
-**Resources:** NeMo Guardrails docs (Colang 2.0); Guardrails AI docs (validator hub, custom validators); LLM Guard docs; current side-by-side comparison guides (verify dates — these go stale fast).
+**Resources:** NeMo Guardrails docs (Colang 2.0); Guardrails AI docs (validator hub, custom validators); LLM Guard docs; current side-by-side comparison guides (verify dates — these go stale fast). **Implementation in this repo:** [docs/phase-5/](docs/phase-5/) · `src/agentic_guardrail/phase5/` · env `GUARDRAIL_OUTPUT_BACKEND`, `GUARDRAIL_TOPICAL_BACKEND`.
 
 ---
 

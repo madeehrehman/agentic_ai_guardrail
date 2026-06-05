@@ -10,5 +10,6 @@ Project overview and setup: [README.md](../README.md) at the repository root.
 | [phase-2/](./phase-2/) | Input guard — injection, PII tokenization, allow/block/rewrite/escalate |
 | [phase-3/](./phase-3/) | Retrieval rail + output guard — indirect injection, prompt leak |
 | [phase-4/](./phase-4/) | Tool-call rails — `guarded_tool`, scope, budget, loop anomaly, post-exec scan |
+| [phase-5/](./phase-5/) | Guardrails AI output validators + NeMo-shaped topical rail |
 
 Main curriculum: [guardrails-agentic-ai-langgraph-learning-plan.md](../guardrails-agentic-ai-langgraph-learning-plan.md)
